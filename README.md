@@ -3,7 +3,8 @@ Blog API - Hệ thống API Blog hiệu năng cao
 
 Cấu trúc project
 blog-api/
-├── cmd/server/main.go           # Entry point
+├── cmd/server/main.go 
+
 ├── internal/
 │   ├── config/config.go         # Configuration
 │   ├── database/               # Database connections
