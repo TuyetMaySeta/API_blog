@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: blog_postgres
+    environment:
+      POSTGRES_DB: blog_db
+      POSTGRES_USER: blog_user
+      POSTGRES_PASSWORD: blog_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    networks:
+      - blog_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U blog_user -d blog_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: blog_redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - blog_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  elasticsearch:
+    image: elasticsearch:8.11.0
+    container_name: blog_elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - blog_network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  blog_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: blog_api
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=blog_user
+      - DB_PASSWORD=blog_password
+      - DB_NAME=blog_db
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - ELASTICSEARCH_HOST=elasticsearch
+      - ELASTICSEARCH_PORT=9200
+      - SERVER_PORT=8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - blog_network
+    volumes:
+      - .:/app
+    working_dir: /app
+
+volumes:
+  postgres_data:
+  redis_data:
+  elasticsearch_data:
+
+networks:
+  blog_network:
+    driver: bridge
