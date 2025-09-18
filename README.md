@@ -277,41 +277,6 @@ make logs
 docker-compose logs -f
 ```
 
-## 🚀 Production Deployment
-
-### Build
-```bash
-# Binary build
-go build -o blog-api ./cmd/server
-
-# Docker build
-docker build -t blog-api:latest .
-```
-
-### Environment Variables
-```bash
-export DB_HOST=prod-postgres-host
-export DB_PASSWORD=secure-password
-export REDIS_HOST=prod-redis-host
-export ELASTICSEARCH_HOST=prod-es-host
-```
-
-## 📈 Scalability Features
-
-- 🔄 **Horizontal Scaling**: Stateless API design
-- 🗄️ **Database Sharding**: Ready for partitioning
-- 🚀 **Redis Cluster**: Distributed caching
-- 🔍 **Elasticsearch Cluster**: Multi-node search
-- ⚖️ **Load Balancer Ready**: Nginx/HAProxy compatible
-
-## 🛡️ Security & Best Practices
-
-- ✅ **Input Validation** với Gin binding
-- 🛡️ **SQL Injection Prevention** với GORM ORM
-- 🔄 **Transaction Integrity** với rollback
-- 🚨 **Graceful Error Handling**
-- 🌐 **CORS Support**
-- 🔧 **Recovery Middleware**
 
 ## 🤝 Contributing
 
@@ -321,26 +286,6 @@ export ELASTICSEARCH_HOST=prod-es-host
 4. Push branch: `git push origin feature/amazing-feature`
 5. Tạo Pull Request
 
-## 📄 License
 
-Dự án này được phân phối dưới [MIT License](LICENSE).
-
-## 🌟 Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=your-username/blog-api&type=Date)](https://star-history.com/#your-username/blog-api&Date)
-
-## 📞 Support
-
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/your-username/blog-api/issues)
-- 💡 **Feature Requests**: [GitHub Discussions](https://github.com/your-username/blog-api/discussions)
-- 📧 **Contact**: your-email@domain.com
-
----
-
-<div align="center">
-
-**⭐ Nếu project hữu ích, đừng quên star repo nhé! ⭐**
-
-Made with ❤️ by [Your Name](https://github.com/your-username)
 
 </div>
